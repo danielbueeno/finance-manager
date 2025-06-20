@@ -50,7 +50,9 @@ export default function Home() {
   const onSave = (id: string, newIncomeList: Entry[], newExpList: Entry[]) => {
     const outdatedCard = cards.find((card) => card.id === id);
     if (!outdatedCard) {
-      return console.log("ERROR: Trying to delete a non-existing item");
+      return console.log(
+        "ERROR: Trying to delete a non-existing item _ test commit"
+      );
     }
 
     const updatedCard: Card = {
