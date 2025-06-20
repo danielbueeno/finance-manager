@@ -39,6 +39,7 @@ const EntryInputGroup = ({
       />
       <Button
         text={buttonText}
+        disabled={!name || name === "" || amount <= 0}
         onClick={() => onAdd(id, name, amount)}
         className="bg-blue-600 text-white px-2 rounded w-1/6"
       />

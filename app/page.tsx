@@ -1,42 +1,77 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FileCog } from "lucide-react";
 import InputWithButton from "./components/molecules/InputWithButton";
 import IconButton from "./components/atoms/IconButton";
 import MonthCard from "./components/organisms/MonthCard";
-import { Card } from "./common/types";
+import { Card, CardStatus, Entry } from "./common/types";
+import { useRouter } from "next/navigation";
+import { useDefaults } from "./context/DefaultContext";
+import { useCards } from "./context/CardsContext";
 
-const defaultIncome = [
-  { name: "Salary 1", amount: 2900 },
-  { name: "Salary 2", amount: 4000 },
-];
-const defaultExpenses = [
-  { name: "Exp1", amount: 1000 },
-  { name: "Exp2", amount: 100 },
-  { name: "Exp3", amount: 600 },
-];
 export default function Home() {
-  const [cards, setCards] = useState<Card[]>([]);
-  const [newMonthName, setNewMonthName] = useState("");
+  const router = useRouter();
+  const { defaultEntries } = useDefaults();
+  const { cards, setCards } = useCards(); // ← Now using context
+
+  const [recordName, setNewMonthName] = useState("");
+  const [edittingCard, setEdittingCard] = useState<string | null>(null);
+
+  const currentMonth = useMemo(
+    () =>
+      new Date().toLocaleString("default", {
+        month: "long",
+        year: "numeric",
+      }),
+    []
+  );
 
   const createCard = () => {
-    if (!newMonthName) return;
+    const name = recordName === "" ? currentMonth : recordName;
     const newCard: Card = {
       id: crypto.randomUUID(),
-      name: newMonthName,
-      incomes: defaultIncome,
-      expenses: defaultExpenses,
+      name: name,
+      incomes: defaultEntries.incomes,
+      expenses: defaultEntries.expenses,
     };
     setCards([...cards, newCard]);
     setNewMonthName("");
+  };
+
+  const deleteCard = (id: string) => {
+    setCards(cards.filter((card) => card.id !== id));
+  };
+
+  const onEdit = (id: string) => {
+    setEdittingCard(id);
+  };
+
+  const onSave = (id: string, newIncomeList: Entry[], newExpList: Entry[]) => {
+    const outdatedCard = cards.find((card) => card.id === id);
+    if (!outdatedCard) {
+      return console.log("ERROR: Trying to delete a non-existing item");
+    }
+
+    const updatedCard: Card = {
+      ...outdatedCard,
+      incomes: newIncomeList,
+      expenses: newExpList,
+    };
+
+    setCards([...cards.filter((c) => c.id !== id), updatedCard]);
+    setEdittingCard(null);
+  };
+
+  const onCancel = () => {
+    setEdittingCard(null);
   };
 
   return (
     <div className="w-full p-10">
       {/* Page Title */}
       <div className="w-full flex justify-center  text-2xl">
-        <span>Monthly Finance Dashboard</span>
+        <span>Finance Board</span>
       </div>
 
       {/* Action buttons */}
@@ -44,28 +79,34 @@ export default function Home() {
         <InputWithButton
           placeholder="Month"
           buttonText="Add"
-          value={newMonthName}
+          value={recordName}
           onChange={(e) => setNewMonthName(e.target.value)}
           onClick={createCard}
         />
+
         <IconButton
           icon={<FileCog />}
-          onClick={() => console.log("to be implemented")}
+          onClick={() => router.push("/settings")}
         />
       </div>
 
       {/* Cards grid*/}
       <div className="grid gap-6 md:grid-cols-3">
-        {cards.map((card) => {
-          return (
-            <MonthCard
-              cardData={card}
-              key={card.id}
-              onAddIncome={() => {}}
-              onAddExpense={() => {}}
-            />
-          );
-        })}
+        {cards.map((card) => (
+          <MonthCard
+            cardData={card}
+            key={card.id}
+            onDelete={deleteCard}
+            onEdit={onEdit}
+            onCancel={onCancel}
+            onSave={onSave}
+            status={
+              card.id === edittingCard
+                ? CardStatus.editting
+                : CardStatus.reading
+            }
+          />
+        ))}
       </div>
     </div>
   );

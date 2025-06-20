@@ -1,5 +1,13 @@
-export type Entry = { name: string; amount: number };
+export type Entry = { name: string; amount: number; id: string };
+export enum EntryVariant {
+  big,
+  small,
+}
 
+export enum CardStatus {
+  editting,
+  reading,
+}
 export type Card = {
   id: string;
   name: string;
