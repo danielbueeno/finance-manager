@@ -1,7 +1,8 @@
 "use client";
-import { ChartLine, Cylinder, Settings } from "lucide-react";
+import { ChartLine, Cylinder, LogOut, Settings } from "lucide-react";
 import IconButton from "../atoms/IconButton";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { logout } from "@/app/login/actions";
 
 const TopBar = () => {
   const router = useRouter();
@@ -25,7 +26,12 @@ const TopBar = () => {
         />
         <IconButton
           icon={<Settings />}
-          onClick={() => router.push("/settings")}
+          onClick={() => redirect("/settings")}
+          className="cursor-pointer text-black"
+        />
+        <IconButton
+          icon={<LogOut />}
+          onClick={logout}
           className="cursor-pointer text-black"
         />
       </div>

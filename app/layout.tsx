@@ -4,6 +4,7 @@ import "./globals.css";
 import { DefaultsProvider } from "./context/DefaultContext";
 import { CardsProvider } from "./context/CardsContext";
 import TopBar from "./components/molecules/TopBar";
+import { UserProvider } from "./context/UserContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,12 +31,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <DefaultsProvider>
-          <CardsProvider>
-            <TopBar />
-            {children}
-          </CardsProvider>
-        </DefaultsProvider>
+        <UserProvider>
+          <DefaultsProvider>
+            <CardsProvider>
+              <TopBar />
+              {children}
+            </CardsProvider>
+          </DefaultsProvider>
+        </UserProvider>
       </body>
     </html>
   );
