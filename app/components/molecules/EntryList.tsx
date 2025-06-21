@@ -1,7 +1,6 @@
 import { CardStatus, Entry, EntryVariant } from "@/app/common/types";
 import IconButton from "../atoms/IconButton";
 import { Trash2 } from "lucide-react";
-import { useState } from "react";
 
 interface EntryListProps {
   title: string;

@@ -12,57 +12,12 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-
-const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-function parseCardDate(cardName: string): Date {
-  const [monthStr, yearStr] = cardName.split(" ");
-  const monthIndex = monthNames.indexOf(monthStr);
-  const year = parseInt(yearStr);
-  return new Date(year, monthIndex);
-}
-
-function formatCardDate(date: Date): string {
-  return `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
-}
+import ChartTooltip from "../atoms/ChartTooltip";
+import { formatCardDate, parseCardDate } from "@/app/common/helperFuntions";
 
 const FinancialViewChart = () => {
   const { defaultEntries } = useDefaults();
   const { cards } = useCards();
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const isFuture = chartData.find((item) => item.name === label)?.isFuture;
-      return (
-        <div className="bg-white border rounded p-2 shadow text-sm">
-          <p className="font-semibold">{label}</p>
-          {isFuture && (
-            <p className="text-purple-600">Prediction based on default</p>
-          )}
-          {payload.map((item: any) => (
-            <p key={item.dataKey}>
-              {item.name}: <span className="font-medium">{item.value}</span>
-            </p>
-          ))}
-        </div>
-      );
-    }
-
-    return null;
-  };
 
   const chartData = useMemo(() => {
     if (!cards.length) return [];
@@ -116,7 +71,7 @@ const FinancialViewChart = () => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<ChartTooltip />} />
           <Legend />
 
           <Line

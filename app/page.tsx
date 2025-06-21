@@ -67,7 +67,7 @@ export default function Home() {
       <div className="p-4 flex justify-between items-center mb-4">
         <span className=" font-bold text-3xl/10">Financial Overview</span>
         <InputWithButton
-          placeholder="Period"
+          placeholder="Month Year"
           buttonText="Add"
           value={recordName}
           onChange={(e) => setNewMonthName(e.target.value)}

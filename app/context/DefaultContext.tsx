@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Card, Entry } from "../common/types";
+import { Card } from "../common/types";
 
 type DefaultsContextType = {
   defaultEntries: Card;
