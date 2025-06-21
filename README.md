@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FinTrack 🧾
 
-## Getting Started
+A simple financial tracking tool where I can record and review my monthly expenses.
 
-First, run the development server:
+## 🚀 Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Framework**: [Next.js](https://nextjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Deployment**: [Vercel](https://vercel.com/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📺 Demo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+A live demo of the current test version is available at:  
+👉 [finance-manager.vercel.app](https://finance-manager.vercel.app)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> **Note:** This is an early, non-persistent version — data is not stored in a database yet.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## 📌 Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Add and view monthly expenses
+- Clean, responsive UI built with Tailwind
+- Built using modern React (App Router)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔜 Roadmap / Next Steps
 
-## Deploy on Vercel
+- [ ] Connect to a database for persistent storage
+- [ ] Add authentication for private expense tracking
+- [ ] Design and publish a landing page for the tool
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
