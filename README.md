@@ -11,7 +11,7 @@ A simple financial tracking tool where I can record and review my monthly expens
 ## 📺 Demo
 
 A live demo of the current test version is available at:  
-👉 [finance-manager.vercel.app](https://finance-manager-six-kohl.vercel.app/)
+👉 [fintrack.vercel.app](https://finance-manager-six-kohl.vercel.app/)
 
 > **Note:** This is an early, non-persistent version — data is not stored in a database yet.
 
