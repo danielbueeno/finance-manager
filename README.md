@@ -26,5 +26,6 @@ A live demo of the current test version is available at:
 
 - [ ] Connect to a database for persistent storage
 - [ ] Add authentication for private expense tracking
+- [ ] Responsiveness
 - [ ] Design and publish a landing page for the tool
 
