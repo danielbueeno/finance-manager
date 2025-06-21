@@ -3,9 +3,11 @@ import { ChartLine, Cylinder, LogOut, Settings } from "lucide-react";
 import IconButton from "../atoms/IconButton";
 import { redirect, useRouter } from "next/navigation";
 import { logout } from "@/app/login/actions";
+import { useUser } from "@/app/context/UserContext";
 
 const TopBar = () => {
   const router = useRouter();
+  const user = useUser();
   return (
     <div className=" w-full flex  py-5 px-8 items-center justify-between border-b border-[#E5E8EB]">
       <div className="flex gap-2 cursor-pointer">
@@ -18,23 +20,26 @@ const TopBar = () => {
           FinTrack
         </span>
       </div>
-      <div className="flex gap-2">
-        <IconButton
-          icon={<ChartLine />}
-          onClick={() => router.push("/dashboard")}
-          className="cursor-pointer text-black"
-        />
-        <IconButton
-          icon={<Settings />}
-          onClick={() => redirect("/settings")}
-          className="cursor-pointer text-black"
-        />
-        <IconButton
-          icon={<LogOut />}
-          onClick={logout}
-          className="cursor-pointer text-black"
-        />
-      </div>
+      {user && (
+        <div className="flex gap-2">
+          <IconButton
+            icon={<ChartLine />}
+            onClick={() => router.push("/dashboard")}
+            className="cursor-pointer text-black"
+          />
+          <IconButton
+            icon={<Settings />}
+            onClick={() => redirect("/settings")}
+            className="cursor-pointer text-black"
+          />
+
+          <IconButton
+            icon={<LogOut />}
+            onClick={logout}
+            className="cursor-pointer text-black"
+          />
+        </div>
+      )}
     </div>
   );
 };
