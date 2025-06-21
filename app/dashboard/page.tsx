@@ -5,6 +5,7 @@ import FinancialViewChart from "../components/organisms/FinancialViewChart";
 import Box from "../components/atoms/Box";
 import { useMemo } from "react";
 import { formatCardDate, parseCardDate } from "../common/helperFuntions";
+import BaseAppTemplate from "../components/templates/BaseAppTemplate";
 
 const DashboardPage = () => {
   const { defaultEntries } = useDefaults();
@@ -47,16 +48,18 @@ const DashboardPage = () => {
   }, [cards, defaultEntries]);
 
   return (
-    <div className="w-full px-40 py-5 gap-10 flex flex-col">
-      <div className="p-4 flex justify-between items-center mb-4 font-bold text-3xl/10">
-        <span>Dashboard view</span>
+    <BaseAppTemplate>
+      <div className="w-full px-40 py-5 gap-10 flex flex-col">
+        <div className="p-4 flex justify-between items-center mb-4 font-bold text-3xl/10">
+          <span>Dashboard view</span>
+        </div>
+        <div className="flex w-full justify-center gap-4">
+          <Box value={totalCardSavings} title="Savings" />
+          <Box value={predictedSavings} title="Predicted Savings" />
+        </div>
+        <FinancialViewChart />
       </div>
-      <div className="flex w-full justify-center gap-4">
-        <Box value={totalCardSavings} title="Savings" />
-        <Box value={predictedSavings} title="Predicted Savings" />
-      </div>
-      <FinancialViewChart />
-    </div>
+    </BaseAppTemplate>
   );
 };
 
