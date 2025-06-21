@@ -1,0 +1,3 @@
+const AuthTest = () => {
+  return <>Test</>;
+};
