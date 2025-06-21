@@ -1,69 +1,20 @@
-import { CardStatus } from "@/app/common/types";
-import IconButton from "../atoms/IconButton";
-import { Pencil, Save, Trash2, X } from "lucide-react";
+import { FinanancialStatus } from "@/app/common/types";
 
 interface CardHeaderProps {
-  id: string;
-  color: string;
   name: string;
-  status: CardStatus;
-  onDelete: (id: string) => void;
-  onEdit: (id: string) => void;
-  onSave: (id: string) => void;
-  onCancel: (id: string) => void;
+  financialStatus?: FinanancialStatus;
 }
-const CardHeader = ({
-  color,
-  name,
-  status,
-  onDelete,
-  onEdit,
-  onSave,
-  onCancel,
-  id,
-}: CardHeaderProps) => {
-  const headerButtons = () => {
-    const buttons = [];
-    if (status === CardStatus.reading) {
-      return (
-        <>
-          <IconButton
-            icon={<Pencil />}
-            onClick={() => onEdit(id)}
-            className="bg-transparent"
-          />
-          <IconButton
-            icon={<Trash2 />}
-            className="bg-transparent"
-            onClick={() => {
-              onDelete(id);
-            }}
-          />
-        </>
-      );
-    }
-    return (
-      <>
-        <IconButton
-          icon={<Save />}
-          onClick={() => onSave(id)}
-          className="bg-transparent"
-        />
-        <IconButton
-          icon={<X />}
-          className="bg-transparent"
-          onClick={() => {
-            onCancel(id);
-          }}
-        />
-      </>
-    );
-  };
-
+const CardHeader = ({ name, financialStatus }: CardHeaderProps) => {
   return (
-    <div className={`${color} w-full rounded-t-2xl p-4 flex justify-between`}>
-      <span className="text-xl font-semibold">{name}</span>
-      <div className="flex">{headerButtons()}</div>
+    <div
+      className={`w-full rounded-t-2xl p-4 pb-2 flex justify-between items-center`}
+    >
+      <span className="text-xl text-[#1C2A3A] font-semibold">{name}</span>
+      {financialStatus && (
+        <div
+          className={`${financialStatus === FinanancialStatus.good ? "bg-green-400" : financialStatus === FinanancialStatus.bad ? "bg-red-400" : ""} p-4 text-sm rounded-2xl`}
+        ></div>
+      )}
     </div>
   );
 };

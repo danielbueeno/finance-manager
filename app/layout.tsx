@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { DefaultsProvider } from "./context/DefaultContext";
 import { CardsProvider } from "./context/CardsContext";
+import TopBar from "./components/molecules/TopBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <DefaultsProvider>
-          <CardsProvider>{children}</CardsProvider>
+          <CardsProvider>
+            <TopBar />
+            {children}
+          </CardsProvider>
         </DefaultsProvider>
       </body>
     </html>

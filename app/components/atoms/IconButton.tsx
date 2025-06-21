@@ -10,7 +10,11 @@ const IconButton = ({ icon, onClick, className = "" }: IconButtonProps) => {
   return (
     <button
       onClick={onClick}
-      className={`p-2 text-white cursor-pointer rounded bg-blue-600 transition ${className}`}
+      className={
+        className
+          ? className
+          : `p-2 text-white cursor-pointer rounded bg-blue-600 transition `
+      }
     >
       {icon}
     </button>

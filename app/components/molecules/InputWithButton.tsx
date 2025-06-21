@@ -22,12 +22,12 @@ const InputWithButton = ({
         placeHolder={placeholder}
         value={value}
         onChange={onChange}
-        className="border px-3 py-2 rounded-l"
+        className="border border-[#B2C9E5] px-3 py-2 rounded-l focus:border-[#7A9DC5] focus:outline-none focus:ring-0"
       />
       <Button
         text={buttonText}
         onClick={onClick}
-        className="bg-blue-600 text-white px-4 py-2 rounded-r"
+        className="bg-[#B2C9E5] px-4 py-2 rounded-r"
       />
     </div>
   );

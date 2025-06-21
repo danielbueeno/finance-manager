@@ -2,13 +2,9 @@
 import { useState } from "react";
 import { CardStatus, Entry } from "../common/types";
 import MonthCard from "../components/organisms/MonthCard";
-import IconButton from "../components/atoms/IconButton";
-import { CircleArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useDefaults } from "../context/DefaultContext";
 
 const SettingsPage = () => {
-  const router = useRouter();
   const { defaultEntries, setDefaultEntries } = useDefaults();
   const [isEditting, setIsEditting] = useState(false);
 
@@ -23,13 +19,10 @@ const SettingsPage = () => {
 
   return (
     <div className="w-full p-10 flex flex-col gap-y-2">
-      <div className="w-full flex justify-center text-2xl">
-        <IconButton
-          icon={<CircleArrowLeft />}
-          onClick={() => router.push("/")}
-        />
+      <div className="p-4 flex justify-between items-center mb-4 font-bold text-3xl/10">
         <span>Settings</span>
       </div>
+
       <div className="w-1/3">
         <MonthCard
           cardData={{
@@ -41,7 +34,7 @@ const SettingsPage = () => {
           key={"settings"}
           onDelete={() => {}}
           onEdit={() => setIsEditting(true)}
-          onCancel={() => setIsEditting(false)}
+          deletable={false}
           onSave={onSave}
           status={isEditting ? CardStatus.editting : CardStatus.reading}
         />

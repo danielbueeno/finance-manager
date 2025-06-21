@@ -14,19 +14,27 @@ interface EntryListProps {
 const EntryList = ({ title, entries, status, onDelete }: EntryListProps) => {
   return (
     <div>
-      <p className="text-sm font-medium">{title}</p>
-      <ul className="text-sm list-disc ml-5">
+      <p className="text-md font-medium">{title}</p>
+
+      <ul className="text-md list-disc ml-5 mb-2">
         {entries.map(({ name, amount, id }) => (
           <li key={name}>
-            {name}: €{amount.toFixed(2)}
-            {status === CardStatus.editting && (
-              <IconButton
-                icon={<Trash2 />}
-                onClick={() => {
-                  onDelete(id);
-                }}
-              />
-            )}
+            <div className="flex items-center justify-between">
+              <span>
+                {name}:{" "}
+                <span className="font-medium">€{amount.toFixed(2)}</span>
+              </span>
+
+              {status === CardStatus.editting && (
+                <IconButton
+                  icon={<Trash2 width={"18px"} />}
+                  className="text-[#1C2A3A] cursor-pointer"
+                  onClick={() => {
+                    onDelete(id);
+                  }}
+                />
+              )}
+            </div>
           </li>
         ))}
       </ul>

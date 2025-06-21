@@ -14,3 +14,9 @@ export type Card = {
   incomes: Entry[];
   expenses: Entry[];
 };
+
+export enum FinanancialStatus {
+  good = "good",
+  bad = "bad",
+  controlled = "controlled",
+}
