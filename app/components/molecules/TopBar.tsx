@@ -1,5 +1,5 @@
 "use client";
-import { Cylinder, Settings } from "lucide-react";
+import { ChartLine, Cylinder, Settings } from "lucide-react";
 import IconButton from "../atoms/IconButton";
 import { useRouter } from "next/navigation";
 
@@ -17,11 +17,18 @@ const TopBar = () => {
           FinTrack
         </span>
       </div>
-      <IconButton
-        icon={<Settings />}
-        onClick={() => router.push("/settings")}
-        className="cursor-pointer text-black"
-      />
+      <div className="flex gap-2">
+        <IconButton
+          icon={<ChartLine />}
+          onClick={() => router.push("/dashboard")}
+          className="cursor-pointer text-black"
+        />
+        <IconButton
+          icon={<Settings />}
+          onClick={() => router.push("/settings")}
+          className="cursor-pointer text-black"
+        />
+      </div>
     </div>
   );
 };

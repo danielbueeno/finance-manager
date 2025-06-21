@@ -18,7 +18,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="w-full p-10 flex flex-col gap-y-2">
+    <div className="w-full px-40 py-5">
       <div className="p-4 flex justify-between items-center mb-4 font-bold text-3xl/10">
         <span>Settings</span>
       </div>

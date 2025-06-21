@@ -4,12 +4,10 @@ import { useMemo, useState } from "react";
 import InputWithButton from "./components/molecules/InputWithButton";
 import MonthCard from "./components/organisms/MonthCard";
 import { Card, CardStatus, Entry } from "./common/types";
-import { useRouter } from "next/navigation";
 import { useDefaults } from "./context/DefaultContext";
 import { useCards } from "./context/CardsContext";
 
 export default function Home() {
-  const router = useRouter();
   const { defaultEntries } = useDefaults();
   const { cards, setCards } = useCards();
 

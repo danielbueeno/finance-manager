@@ -68,9 +68,9 @@ const MonthCard = ({
     newIncomeList.reduce((s, e) => s + e.amount, 0) - totalExpenses;
 
   const financialStatus =
-    totalExpenses > savings
+    totalExpenses > totalIncome
       ? FinanancialStatus.bad
-      : totalExpenses < savings
+      : totalExpenses < totalIncome
         ? FinanancialStatus.good
         : FinanancialStatus.controlled;
 
