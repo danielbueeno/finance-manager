@@ -1,33 +1,30 @@
+// app/context/UserContext.tsx
 "use client";
 
+import { createContext, ReactNode, useContext } from "react";
 import { User } from "@supabase/supabase-js";
-import { createContext, ReactNode, useEffect, useState } from "react";
-import { createClient } from "../utils/supabase/client";
 
-export type UserContextType = {
+export const UserContext = createContext<{ user: User | null }>({
+  user: null,
+});
+
+export const UserProvider = ({
+  children,
+  user,
+}: {
+  children: ReactNode;
   user: User | null;
-  loading: boolean;
+}) => {
+  return (
+    <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
+  );
 };
 
-export const UserContext = createContext<UserContextType | null>(null);
-
-export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const supabase = createClient();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data, error }) => {
-      if (!error && data?.user) {
-        setUser(data.user);
-      }
-      setLoading(false);
-    });
-  }, [supabase]);
-
-  return (
-    <UserContext.Provider value={{ user, loading }}>
-      {children}
-    </UserContext.Provider>
-  );
+// Hook de uso opcional
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error("useUser must be used within UserProvider");
+  }
+  return context.user;
 };

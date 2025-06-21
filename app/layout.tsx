@@ -5,6 +5,7 @@ import { DefaultsProvider } from "./context/DefaultContext";
 import { CardsProvider } from "./context/CardsContext";
 import TopBar from "./components/molecules/TopBar";
 import { UserProvider } from "./context/UserContext";
+import { createClient } from "./utils/supabase/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,17 +22,22 @@ export const metadata: Metadata = {
   description: "",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await (await supabase).auth.getUser();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <UserProvider>
+        <UserProvider user={user}>
           <DefaultsProvider>
             <CardsProvider>
               <TopBar />
