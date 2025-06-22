@@ -24,25 +24,30 @@ const EntryInputGroup = ({
   buttonText = "Add",
 }: EntryInputGroupProps) => {
   return (
-    <div className="flex flex gap-x-2">
-      <Input
-        placeHolder="Name"
-        value={name}
-        onChange={(e) => onChangeName(e.target.value)}
-        className={`${baseInputStyle} w-1/2`}
-      />
-      <Input
-        placeHolder="Amount"
-        value={String(amount)}
-        onChange={(e) => onChangeAmount(Number(e.target.value))}
-        className={`${baseInputStyle} w-1/2`}
-        type="number"
-      />
+    <div className="flex flex gap-x-2 ">
+      <div className="w-1/2">
+        <Input
+          placeHolder="Name"
+          value={name}
+          onChange={(e) => onChangeName(e.target.value)}
+          className={`${baseInputStyle} w-full`}
+        />
+      </div>
+
+      <div className="w-1/2">
+        <Input
+          placeHolder="Amount"
+          value={String(amount)}
+          onChange={(e) => onChangeAmount(Number(e.target.value))}
+          className={`${baseInputStyle} w-full`}
+          type="number"
+        />
+      </div>
       <Button
         text={buttonText}
         disabled={!name || name === "" || amount <= 0}
         onClick={() => onAdd(id, name, amount)}
-        className="bg-[#B2C9E5] px-4 py-2 rounded"
+        className="bg-[#B2C9E5] px-4 py-2 rounded w-full"
       />
     </div>
   );
