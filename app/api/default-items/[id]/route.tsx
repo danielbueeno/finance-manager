@@ -6,11 +6,6 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const { id } = await context.params;
 
   await supabase.from("default_items").delete().eq("board_id", id);

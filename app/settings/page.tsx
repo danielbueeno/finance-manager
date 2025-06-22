@@ -24,10 +24,10 @@ const SettingsPage = () => {
     newIncomeList: Entry[],
     newExpList: Entry[]
   ) => {
-    const board_id = 1;
+    const board_id = defaultItems[0].board_id;
 
     try {
-      await fetch(`/api/default-items/1`, {
+      await fetch(`/api/default-items/${board_id}`, {
         method: "DELETE",
       });
 

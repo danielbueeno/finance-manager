@@ -74,7 +74,7 @@ export async function PUT(
   }
 
   const body = await req.json();
-  const { name, start_date, end_date, incomes, expenses } = body;
+  const { incomes, expenses } = body;
 
   // 1. Confirm the period belongs to this user
   const { data: period, error: periodError } = await supabase
