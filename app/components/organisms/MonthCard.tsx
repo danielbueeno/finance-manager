@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardStatus, Entry, FinanancialStatus } from "@/app/common/types";
 import EntryInputGroup from "../molecules/EntryInputGroup";
 import EntryList from "../molecules/EntryList";
@@ -26,7 +26,6 @@ const MonthCard = ({
   // Income logic
   const [newIncName, setNewIncName] = useState("");
   const [newIncValue, setNewIncValue] = useState(0);
-  const [newIncomeList, setNewIncomeList] = useState(incomes);
 
   const onAddIncome = () => {
     setNewIncomeList((prev) => [
@@ -45,7 +44,6 @@ const MonthCard = ({
   // Expenses logic
   const [newExpName, setNewExpName] = useState("");
   const [newExpValue, setNewExpValue] = useState(0);
-  const [newExpList, setNewExpList] = useState(expenses);
 
   const onAddExpense = () => {
     setNewExpList((prev) => [
@@ -60,6 +58,14 @@ const MonthCard = ({
     const filteredExpenses = newExpList.filter((entry) => entry.id !== id);
     setNewExpList(filteredExpenses);
   };
+
+  const [newIncomeList, setNewIncomeList] = useState<Entry[]>([]);
+  const [newExpList, setNewExpList] = useState<Entry[]>([]);
+
+  useEffect(() => {
+    setNewIncomeList(incomes);
+    setNewExpList(expenses);
+  }, [incomes, expenses]);
 
   // General logic
   const totalExpenses = newExpList.reduce((s, e) => s + e.amount, 0);
