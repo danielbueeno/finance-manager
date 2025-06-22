@@ -13,7 +13,7 @@ A simple financial tracking tool where I can record and review my monthly expens
 A live demo of the current test version is available at:  
 👉 [fintrack.vercel.app](https://fintrack-demo-2025.vercel.app/)
 
-> **Note:** This is an early, non-persistent version — data is not stored in a database yet.
+> **Note:** The demo is an early, non-persistent version — data is not stored in a database yet. The production env is currently available only for myself :)
 
 
 ## 📌 Features
