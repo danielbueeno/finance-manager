@@ -1,18 +1,45 @@
 "use client";
 
-import { Card, CardStatus, Entry } from "@/app/common/types";
-import { useCards } from "@/app/context/CardsContext";
-import { useDefaults } from "@/app/context/DefaultContext";
-import { useMemo, useState } from "react";
+import { Board, Card, CardStatus, Entry, Period } from "@/app/common/types";
+import { useEffect, useMemo, useState } from "react";
 import InputWithButton from "../molecules/InputWithButton";
 import MonthCard from "./MonthCard";
+import { periodsToCards, periodToCard } from "@/app/common/helperFuntions";
 
 export default function FinancialOverview() {
-  const { defaultEntries } = useDefaults();
-  const { cards, setCards } = useCards();
+  const [boards, setBoards] = useState<Board[]>([]);
+  const [periodName, setPeriodName] = useState("");
 
-  const [recordName, setNewMonthName] = useState("");
+  const [cards, setCards] = useState<Card[]>([]);
   const [edittingCard, setEdittingCard] = useState<string | null>(null);
+
+  // Get boards - in reality the current implementation only allows one board per user
+  useEffect(() => {
+    const fetchBoards = async () => {
+      try {
+        const res = await fetch("/api/boards");
+        if (!res.ok) return;
+
+        const data = await res.json();
+        setBoards(data);
+      } catch (err) {
+        console.error("Error fetching boards:", err);
+      }
+    };
+    fetchBoards();
+  }, []);
+
+  // Get periods and parse it to board cards - can be improved to avoid this parse and use Period directly
+  useEffect(() => {
+    const fetchAndTransform = async () => {
+      const res = await fetch("/api/periods");
+      const periods: Period[] = await res.json();
+      const cards = periodsToCards(periods);
+      setCards(cards);
+    };
+
+    fetchAndTransform();
+  }, []);
 
   const currentMonth = useMemo(
     () =>
@@ -23,43 +50,115 @@ export default function FinancialOverview() {
     []
   );
 
-  const createCard = () => {
-    const name = recordName === "" ? currentMonth : recordName;
-    const newCard: Card = {
-      id: crypto.randomUUID(),
-      name: name,
-      incomes: defaultEntries.incomes,
-      expenses: defaultEntries.expenses,
+  const createPeriod = async () => {
+    const name = periodName === "" ? currentMonth : periodName;
+
+    // Parse month and year from name
+    const [monthName, year] = name.split(" ");
+    const monthIndex = new Date(`${monthName} 1, ${year}`).getMonth(); // 0-based
+
+    // Get start and end dates for that month
+    const start = new Date(parseInt(year), monthIndex, 1);
+    const end = new Date(parseInt(year), monthIndex + 1, 0); // Last day of month
+
+    const period = {
+      board_id: boards[0].id,
+      name,
+      start_date: start.toISOString().split("T")[0], // YYYY-MM-DD
+      end_date: end.toISOString().split("T")[0],
     };
-    setCards([...cards, newCard]);
-    setNewMonthName("");
-    setEdittingCard(newCard.id);
+
+    try {
+      const res = await fetch("/api/periods", {
+        method: "POST",
+        body: JSON.stringify(period),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        console.error("Error creating period:", error);
+        return;
+      }
+
+      const data = await res.json();
+      const card = periodToCard(data);
+      setCards([...cards, card]);
+      setPeriodName("");
+      setEdittingCard(card.id);
+    } catch (err) {
+      console.error("Unexpected error:", err);
+    }
   };
 
-  const deleteCard = (id: string) => {
-    setCards(cards.filter((card) => card.id !== id));
+  const deleteCard = async (id: string) => {
+    const confirmed = confirm("Are you sure you want to delete this period?");
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`/api/periods/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) return;
+
+      setCards((prev) => prev.filter((card) => card.id !== id));
+    } catch (err) {
+      console.error("Error deleting period:", err);
+    }
   };
 
   const onEdit = (id: string) => {
     setEdittingCard(id);
   };
 
-  const onSave = (id: string, newIncomeList: Entry[], newExpList: Entry[]) => {
+  const onSave = async (
+    id: string,
+    newIncomeList: Entry[],
+    newExpList: Entry[]
+  ) => {
     const outdatedCard = cards.find((card) => card.id === id);
     if (!outdatedCard) {
-      return console.log(
-        "ERROR: Trying to delete a non-existing item _ test commit"
-      );
+      return console.log("ERROR: Trying to save a non-existing card");
     }
 
+    // 1. Build the updated card for local state
     const updatedCard: Card = {
       ...outdatedCard,
       incomes: newIncomeList,
       expenses: newExpList,
     };
 
-    setCards(cards.map((card) => (card.id === id ? updatedCard : card)));
-    setEdittingCard(null);
+    // 2. Persist the update to the backend
+    try {
+      const res = await fetch(`/api/periods/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: outdatedCard.name,
+          start_date: "", // fill in if needed
+          end_date: "", // fill in if needed
+          incomes: newIncomeList.map((item) => ({
+            ...item,
+            type: "income",
+          })),
+          expenses: newExpList.map((item) => ({
+            ...item,
+            type: "expense",
+          })),
+        }),
+      });
+
+      if (!res.ok) return;
+
+      setCards(cards.map((card) => (card.id === id ? updatedCard : card)));
+      setEdittingCard(null);
+    } catch (err) {
+      console.error("Unexpected error while saving:", err);
+    }
   };
 
   return (
@@ -69,9 +168,9 @@ export default function FinancialOverview() {
         <InputWithButton
           placeholder="Month Year"
           buttonText="Add"
-          value={recordName}
-          onChange={(e) => setNewMonthName(e.target.value)}
-          onClick={createCard}
+          value={periodName}
+          onChange={(e) => setPeriodName(e.target.value)}
+          onClick={createPeriod}
         />
       </div>
 

@@ -1,43 +1,75 @@
 "use client";
-import { useCards } from "../context/CardsContext";
-import { useDefaults } from "../context/DefaultContext";
 import FinancialViewChart from "../components/organisms/FinancialViewChart";
 import Box from "../components/atoms/Box";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { formatCardDate, parseCardDate } from "../common/helperFuntions";
 import BaseAppTemplate from "../components/templates/BaseAppTemplate";
+import { DefaultItem, Period } from "../common/types";
 
 const DashboardPage = () => {
-  const { defaultEntries } = useDefaults();
-  const { cards } = useCards();
+  const [periods, setPeriods] = useState<Period[]>([]);
+  const [defaultItems, setDefaultItems] = useState<DefaultItem[]>([]);
+
+  useEffect(() => {
+    const fetchAndTransform = async () => {
+      const res = await fetch("/api/periods");
+      const periods: Period[] = await res.json();
+      setPeriods(periods);
+    };
+
+    fetchAndTransform();
+  }, []);
+
+  // Get default items
+  useEffect(() => {
+    const fetchAndTransform = async () => {
+      const res = await fetch("/api/default-items");
+      const items: DefaultItem[] = await res.json();
+      setDefaultItems(items);
+    };
+    fetchAndTransform();
+  }, []);
+
+  const defaultEntries = useMemo(
+    () => ({
+      incomes: defaultItems.filter((item) => item.type === "income"),
+      expenses: defaultItems.filter((item) => item.type === "expense"),
+    }),
+    [defaultItems]
+  );
 
   // Sum of all savings from actual cards
   const totalCardSavings = useMemo(() => {
-    return cards.reduce((sum, card) => {
-      const income = card.incomes.reduce((acc, e) => acc + Number(e.amount), 0);
-      const expenses = card.expenses.reduce(
-        (acc, e) => acc + Number(e.amount),
-        0
-      );
+    return periods.reduce((sum, period) => {
+      const income = period.items
+        .filter((item) => item.type === "income")
+        .reduce((acc, e) => acc + Number(e.amount), 0);
+      const expenses = period.items
+        .filter((item) => item.type === "expense")
+        .reduce((acc, e) => acc + Number(e.amount), 0);
       return sum + (income - expenses);
     }, 0);
-  }, [cards]);
+  }, [periods]);
 
   // Predicted savings over 12 months (mix of existing and default)
   const predictedSavings = useMemo(() => {
-    if (!cards.length) return 0;
+    if (!periods.length) return 0;
 
-    const startDate = parseCardDate(cards[0].name);
+    const startDate = parseCardDate(periods[0].name);
     let total = 0;
 
     for (let i = 0; i < 12; i++) {
       const date = new Date(startDate);
       date.setMonth(startDate.getMonth() + i);
       const monthName = formatCardDate(date);
-      const card = cards.find((c) => c.name === monthName);
+      const period = periods.find((c) => c.name === monthName);
 
-      const incomes = card?.incomes ?? defaultEntries.incomes;
-      const expenses = card?.expenses ?? defaultEntries.expenses;
+      const incomes =
+        period?.items.filter((item) => item.type === "income") ??
+        defaultEntries.incomes;
+      const expenses =
+        period?.items.filter((item) => item.type === "expense") ??
+        defaultEntries.expenses;
 
       const incomeSum = incomes.reduce((s, e) => s + Number(e.amount), 0);
       const expenseSum = expenses.reduce((s, e) => s + Number(e.amount), 0);
@@ -45,7 +77,7 @@ const DashboardPage = () => {
     }
 
     return total;
-  }, [cards, defaultEntries]);
+  }, [periods, defaultEntries]);
 
   return (
     <BaseAppTemplate>

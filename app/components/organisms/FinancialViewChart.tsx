@@ -1,7 +1,5 @@
 "use client";
-import { useCards } from "@/app/context/CardsContext";
-import { useDefaults } from "@/app/context/DefaultContext";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   LineChart,
   CartesianGrid,
@@ -14,15 +12,44 @@ import {
 } from "recharts";
 import ChartTooltip from "../atoms/ChartTooltip";
 import { formatCardDate, parseCardDate } from "@/app/common/helperFuntions";
+import { DefaultItem, Period } from "@/app/common/types";
 
 const FinancialViewChart = () => {
-  const { defaultEntries } = useDefaults();
-  const { cards } = useCards();
+  const [periods, setPeriods] = useState<Period[]>([]);
+  const [defaultItems, setDefaultItems] = useState<DefaultItem[]>([]);
+
+  useEffect(() => {
+    const fetchAndTransform = async () => {
+      const res = await fetch("/api/periods");
+      const periods: Period[] = await res.json();
+      setPeriods(periods);
+    };
+
+    fetchAndTransform();
+  }, []);
+
+  // Get default items
+  useEffect(() => {
+    const fetchAndTransform = async () => {
+      const res = await fetch("/api/default-items");
+      const items: DefaultItem[] = await res.json();
+      setDefaultItems(items);
+    };
+    fetchAndTransform();
+  }, []);
+
+  const defaultEntries = useMemo(
+    () => ({
+      incomes: defaultItems.filter((item) => item.type === "income"),
+      expenses: defaultItems.filter((item) => item.type === "expense"),
+    }),
+    [defaultItems]
+  );
 
   const chartData = useMemo(() => {
-    if (!cards.length) return [];
+    if (!periods.length) return [];
 
-    const startDate = parseCardDate(cards[0].name);
+    const startDate = parseCardDate(periods[0].name);
     const result: {
       name: string;
       income: number;
@@ -36,11 +63,15 @@ const FinancialViewChart = () => {
       date.setMonth(startDate.getMonth() + i);
 
       const monthName = formatCardDate(date);
-      const card = cards.find((c) => c.name === monthName);
+      const period = periods.find((c) => c.name === monthName);
 
-      const isFuture = !card;
-      const incomes = card?.incomes ?? defaultEntries.incomes;
-      const expenses = card?.expenses ?? defaultEntries.expenses;
+      const isFuture = !period;
+      const incomes =
+        period?.items.filter((item) => item.type === "income") ??
+        defaultEntries.incomes;
+      const expenses =
+        period?.items.filter((item) => item.type === "expense") ??
+        defaultEntries.expenses;
 
       const totalIncome = incomes.reduce((sum, e) => sum + Number(e.amount), 0);
       const totalExpenses = expenses.reduce(
@@ -59,7 +90,7 @@ const FinancialViewChart = () => {
     }
 
     return result;
-  }, [cards, defaultEntries]);
+  }, [periods, defaultEntries]);
 
   return (
     <div className="w-full" style={{ height: 400 }}>
