@@ -1,9 +1,8 @@
 "use client";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { CardStatus, Entry } from "../common/types";
 import MonthCard from "../components/organisms/MonthCard";
 import { useDefaults } from "../context/DefaultContext";
-import { UserContext } from "../context/UserContext";
 import BaseAppTemplate from "../components/templates/BaseAppTemplate";
 
 const SettingsPage = () => {

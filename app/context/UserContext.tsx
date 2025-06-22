@@ -1,4 +1,3 @@
-// app/context/UserContext.tsx
 "use client";
 
 import { createContext, ReactNode, useContext } from "react";
@@ -18,13 +17,4 @@ export const UserProvider = ({
   return (
     <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
   );
-};
-
-// Hook de uso opcional
-export const useUser = () => {
-  const context = useContext(UserContext);
-  if (!context) {
-    throw new Error("useUser must be used within UserProvider");
-  }
-  return context.user;
 };

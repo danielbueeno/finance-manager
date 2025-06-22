@@ -1,7 +1,7 @@
 "use client";
 
-import { useContext, ReactNode } from "react";
-import { UserContext, useUser } from "@/app/context/UserContext";
+import { ReactNode, useContext } from "react";
+import { UserContext } from "@/app/context/UserContext";
 import { redirect } from "next/navigation";
 
 export default function BaseAppTemplate({
@@ -9,7 +9,7 @@ export default function BaseAppTemplate({
 }: {
   children?: ReactNode;
 }) {
-  const user = useUser();
+  const { user } = useContext(UserContext);
   if (!user) {
     redirect("/login");
   }
