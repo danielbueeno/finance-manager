@@ -1,10 +1,11 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { CardStatus, DefaultItem, Entry } from "../common/types";
+import { Board, CardStatus, DefaultItem, Entry } from "../common/types";
 import MonthCard from "../components/organisms/MonthCard";
 import BaseAppTemplate from "../components/templates/BaseAppTemplate";
 
 const SettingsPage = () => {
+  const [boards, setBoards] = useState<Board[]>([]);
   const [defaultItems, setDefaultItems] = useState<DefaultItem[]>([]);
   const [isEditting, setIsEditting] = useState(false);
 
@@ -19,12 +20,28 @@ const SettingsPage = () => {
     fetchAndTransform();
   }, []);
 
+  // Get boards - in reality the current implementation only allows one board per user
+  useEffect(() => {
+    const fetchBoards = async () => {
+      try {
+        const res = await fetch("/api/boards");
+        if (!res.ok) return;
+
+        const data = await res.json();
+        setBoards(data);
+      } catch (err) {
+        console.error("Error fetching boards:", err);
+      }
+    };
+    fetchBoards();
+  }, []);
+
   const onSave = async (
     id: string,
     newIncomeList: Entry[],
     newExpList: Entry[]
   ) => {
-    const board_id = defaultItems[0].board_id;
+    const board_id = boards[0].id;
 
     try {
       await fetch(`/api/default-items/${board_id}`, {
