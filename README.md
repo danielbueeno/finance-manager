@@ -8,24 +8,11 @@ A simple financial tracking tool where I can record and review my monthly expens
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Deployment**: [Vercel](https://vercel.com/)
 
-## 📺 Demo
-
-A live demo of the current test version is available at:  
-👉 [fintrack.vercel.app](https://fintrack-demo-2025.vercel.app/)
-
-> **Note:** This is an early, non-persistent version — data is not stored in a database yet.
-
-
 ## 📌 Features
 
-- Add and view monthly expenses
+- Add default expenses and income
+- Add expenses and incomes per month and visualize them in a board view
+- Dashboard with Expenses x Income x Savings over time
+- Saving prediction
 - Clean, responsive UI built with Tailwind
 - Built using modern React (App Router)
-
-## 🔜 Roadmap / Next Steps
-
-- [ ] Connect to a database for persistent storage
-- [ ] Add authentication for private expense tracking
-- [ ] Responsiveness
-- [ ] Design and publish a landing page for the tool
-
